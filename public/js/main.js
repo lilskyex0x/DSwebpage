@@ -2,6 +2,11 @@
 async function loadProducts() {
     try {
         const response = await fetch('/api/products');
+        
+        if (!response.ok) {
+            throw new Error('Failed to fetch products');
+        }
+        
         const products = await response.json();
         
         const productsGrid = document.getElementById('products-grid');
@@ -13,17 +18,33 @@ async function loadProducts() {
         
         // Create product cards
         products.forEach(product => {
-            // Add to grid
+            // Add to grid - using safe DOM methods
             const productCard = document.createElement('div');
             productCard.className = 'product-card';
-            productCard.innerHTML = `
-                <img src="${product.image}" alt="${product.name}">
-                <div class="product-info">
-                    <h3>${product.name}</h3>
-                    <p>${product.description}</p>
-                    <div class="product-price">$${product.price.toFixed(2)}</div>
-                </div>
-            `;
+            
+            const img = document.createElement('img');
+            img.src = product.image;
+            img.alt = product.name;
+            
+            const productInfo = document.createElement('div');
+            productInfo.className = 'product-info';
+            
+            const title = document.createElement('h3');
+            title.textContent = product.name;
+            
+            const description = document.createElement('p');
+            description.textContent = product.description;
+            
+            const priceDiv = document.createElement('div');
+            priceDiv.className = 'product-price';
+            priceDiv.textContent = `$${product.price.toFixed(2)}`;
+            
+            productInfo.appendChild(title);
+            productInfo.appendChild(description);
+            productInfo.appendChild(priceDiv);
+            
+            productCard.appendChild(img);
+            productCard.appendChild(productInfo);
             productsGrid.appendChild(productCard);
             
             // Add to select dropdown
@@ -61,6 +82,10 @@ document.getElementById('order-form').addEventListener('submit', async (e) => {
             },
             body: JSON.stringify(formData)
         });
+        
+        if (!response.ok) {
+            throw new Error('Failed to submit order');
+        }
         
         const result = await response.json();
         

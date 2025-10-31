@@ -1,13 +1,12 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 // Serve main page
@@ -18,6 +17,14 @@ app.get('/', (req, res) => {
 // API endpoint to handle orders
 app.post('/api/orders', (req, res) => {
   const { name, email, product, quantity, address } = req.body;
+  
+  // Validate required fields
+  if (!name || !email || !product || !quantity || !address) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'All fields are required' 
+    });
+  }
   
   // In a real application, you would save this to a database
   console.log('New Order Received:');
