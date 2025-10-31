@@ -1,0 +1,16 @@
+{
+  "name": "dropshipping-website",
+  "version": "1.0.0",
+  "description": "Simple dropshipping website with Node.js backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["dropshipping", "ecommerce", "nodejs"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
